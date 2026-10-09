@@ -1,0 +1,66 @@
+# gradle
+
+.gradle/
+build/
+out/
+classes/
+local.properties
+
+# loader dev run directories
+# Fabric uses run/, NeoForge uses runs/, Forge generates run configs + .launch files
+run/
+runs/
+*/run/
+*/runs/
+logs/
+
+# NeoForge / FML generated
+.eclipse/
+*/.eclipse/
+
+# Forge generated run configs
+*.launch
+runClient*.txt
+runServer*.txt
+
+# eclipse
+
+.settings/
+.classpath
+.project
+bin/
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.vscode/
+
+# macos
+
+*.DS_Store
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
+
+# modrinth publish token / scratch
+scripts/
+scripts/.mr_token
+scripts/.mr_data.json
+
+# curseforge publish token / project id / upload ledger
+scripts/.cf_token
+scripts/.cf_project_id
+scripts/.cf_uploaded.json
+
+# python bytecode
+scripts/__pycache__/

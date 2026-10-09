@@ -1,0 +1,371 @@
+# CodxLib — Stonecutter central config. Single source of truth for node versions.
+#
+# NOTE (step 3): the fabric-api / neoforge version pins below are APPROXIMATE and
+# must be verified before a node actually builds. deps.minecraft values are exact.
+# TODO(publishing/step 4): mod.group="codx" gives the correct source package
+#   (codx.codxlib.*), but confirm the maven publish group stays "codx.codxlib" so
+#   consumer coordinates (codx.codxlib:codxlib-*) don't change.
+# TODO: confirm codxlib's actual license (placeholder MIT below).
+
+loomx.loom_version = "1.16-SNAPSHOT"
+
+mod.id = "codxlib"
+mod.name = "CodxLib"
+mod.group = "codx"
+mod.version = "1.6.1"
+mod.description = "Shared library for codx mods (Fabric, Forge, NeoForge)"
+mod.authors = ["codx"]
+mod.license.name = "MIT"
+mod.license.url = "https://opensource.org/licenses/MIT"
+mod.sources_url = "https://github.com/Codx-org/codxlib"
+mod.homepage_url = "https://modrinth.com/mod/codxlib"
+mod.issues_url = "https://github.com/Codx-org/codxlib/issues"
+mod.inception_year = "2025"
+
+[fabric]
+# BUILD-TIME loader pin only (what dev runs / the compile classpath use). One recent
+# loader for all nodes; it is MC-version-independent, so it also runs the 1.20.x/1.21.x
+# nodes. This must NOT leak into the shipped manifest — see deps.fabric-loader-min.
+deps.fabric-loader = "0.19.3"
+
+# Each [fabric."<mc>"] section carries deps.fabric-loader-min: the loader floor DECLARED
+# in that node's fabric.mod.json. It is deliberately per-MC-version and set to exactly
+# what that node's pinned Fabric API already requires (read out of each fabric-api jar's
+# own fabric.mod.json), so we add no restriction beyond what fabric-api enforces anyway.
+# Do NOT collapse this back to a single global value: doing so once shipped every node
+# with ">=0.19.3", which rejected the loader builds launchers install for older MC
+# ("requires version 0.19.3 or later ... but only 0.18.1 is present").
+# There is intentionally no global fallback here, so a new node missing the key fails
+# the build loudly instead of silently inheriting a wrong floor.
+
+# Each section ALSO carries deps.fabric-api-min: the Fabric API floor DECLARED in that
+# node's fabric.mod.json, as opposed to deps.fabric-api, which is the BUILD-TIME pin
+# (compile classpath + dev runs). Same split, same reason: emitting the pin as the
+# declared range forbids every OLDER build of the same Fabric API line, so a player who
+# needs 0.92.8 on 1.20.1 (because a later build breaks another mod) cannot run CodxLib
+# at all -- and because consumers hard-depend on codxlib, that floor is transitive and
+# overrides whatever floor THEY declare. Set each value to the oldest build of that
+# line CodxLib is actually known to work against; equal to the pin where unmeasured.
+# No global fallback, for the same reason as above.
+
+[fabric."1.20.1"]
+deps.minecraft = "1.20.1"
+deps.fabric-api = "0.92.11+1.20.1"
+deps.fabric-api-min = "0.92.8+1.20.1"
+deps.fabric-loader-min = "0.16.10"
+
+[fabric."1.20.6"]
+deps.minecraft = "1.20.6"
+deps.fabric-api = "0.100.8+1.20.6"
+deps.fabric-api-min = "0.100.8+1.20.6"
+deps.fabric-loader-min = "0.15.6"
+
+[fabric."1.21.1"]
+deps.minecraft = "1.21.1"
+deps.fabric-api = "0.116.4+1.21.1"
+deps.fabric-api-min = "0.116.4+1.21.1"
+deps.fabric-loader-min = "0.15.11"
+
+[fabric."1.21.4"]
+deps.minecraft = "1.21.4"
+deps.fabric-api = "0.119.4+1.21.4"
+deps.fabric-api-min = "0.119.4+1.21.4"
+deps.fabric-loader-min = "0.16.9"
+
+[fabric."1.21.8"]
+deps.minecraft = "1.21.8"
+deps.fabric-api = "0.136.1+1.21.8"
+deps.fabric-api-min = "0.136.1+1.21.8"
+deps.fabric-loader-min = "0.16.13"
+
+[fabric."1.21.11"]
+deps.minecraft = "1.21.11"
+deps.fabric-api = "0.141.5+1.21.11"
+deps.fabric-api-min = "0.141.5+1.21.11"
+deps.fabric-loader-min = "0.17.3"
+
+[fabric."26.1.2"]
+deps.minecraft = "26.1.2"
+deps.fabric-api = "0.145.4+26.1.2"
+deps.fabric-api-min = "0.145.4+26.1.2"
+deps.fabric-loader-min = "0.18.4"
+
+[fabric."26.3"]
+deps.minecraft = "26.3"
+deps.fabric-api = "0.160.5+26.3"
+deps.fabric-api-min = "0.160.5+26.3"
+deps.fabric-loader-min = "0.19.3"
+
+[fabric."26.2"]
+deps.minecraft = "26.2"
+deps.fabric-api = "0.155.2+26.2"
+deps.fabric-api-min = "0.155.2+26.2"
+deps.fabric-loader-min = "0.18.4"
+
+[neoforge."1.20.1"]
+deps.minecraft = "1.20.1"
+deps.neoforge = "47.1.106"
+
+[neoforge."1.20.6"]
+deps.minecraft = "1.20.6"
+deps.neoforge = "20.6.139"
+
+[neoforge."1.21.1"]
+deps.minecraft = "1.21.1"
+deps.neoforge = "21.1.216"
+
+[neoforge."1.21.4"]
+deps.minecraft = "1.21.4"
+deps.neoforge = "21.4.157"
+
+[neoforge."1.21.8"]
+deps.minecraft = "1.21.8"
+deps.neoforge = "21.8.54"
+
+[neoforge."1.21.11"]
+deps.minecraft = "1.21.11"
+deps.neoforge = "21.11.44"
+
+[neoforge."26.1.2"]
+deps.minecraft = "26.1.2"
+deps.neoforge = "26.1.2.7-beta"
+
+[neoforge."26.3"]
+deps.minecraft = "26.3"
+deps.neoforge = "26.3.0.1-beta"
+
+[neoforge."26.2"]
+deps.minecraft = "26.2"
+deps.neoforge = "26.2.0.25-beta"
+
+# ---- Fabric point releases (exact-pinned; added 2026-07-19) ----
+[fabric."1.20.2"]
+deps.minecraft = "1.20.2"
+deps.fabric-api = "0.91.6+1.20.2"
+deps.fabric-api-min = "0.91.6+1.20.2"
+deps.fabric-loader-min = "0.14.22"
+
+[fabric."1.20.3"]
+deps.minecraft = "1.20.3"
+deps.fabric-api = "0.91.1+1.20.3"
+deps.fabric-api-min = "0.91.1+1.20.3"
+deps.fabric-loader-min = "0.14.23"
+
+[fabric."1.20.4"]
+deps.minecraft = "1.20.4"
+deps.fabric-api = "0.97.3+1.20.4"
+deps.fabric-api-min = "0.97.3+1.20.4"
+deps.fabric-loader-min = "0.15.1"
+
+[fabric."1.20.5"]
+deps.minecraft = "1.20.5"
+deps.fabric-api = "0.97.8+1.20.5"
+deps.fabric-api-min = "0.97.8+1.20.5"
+deps.fabric-loader-min = "0.15.6"
+
+[fabric."1.21"]
+deps.minecraft = "1.21"
+deps.fabric-api = "0.102.0+1.21"
+deps.fabric-api-min = "0.102.0+1.21"
+deps.fabric-loader-min = "0.15.11"
+
+[fabric."1.21.2"]
+deps.minecraft = "1.21.2"
+deps.fabric-api = "0.106.1+1.21.2"
+deps.fabric-api-min = "0.106.1+1.21.2"
+deps.fabric-loader-min = "0.16.7"
+
+[fabric."1.21.3"]
+deps.minecraft = "1.21.3"
+deps.fabric-api = "0.114.1+1.21.3"
+deps.fabric-api-min = "0.114.1+1.21.3"
+deps.fabric-loader-min = "0.16.8"
+
+[fabric."1.21.5"]
+deps.minecraft = "1.21.5"
+deps.fabric-api = "0.128.2+1.21.5"
+deps.fabric-api-min = "0.128.2+1.21.5"
+deps.fabric-loader-min = "0.16.10"
+
+[fabric."1.21.6"]
+deps.minecraft = "1.21.6"
+deps.fabric-api = "0.128.2+1.21.6"
+deps.fabric-api-min = "0.128.2+1.21.6"
+deps.fabric-loader-min = "0.16.13"
+
+[fabric."1.21.7"]
+deps.minecraft = "1.21.7"
+deps.fabric-api = "0.129.0+1.21.7"
+deps.fabric-api-min = "0.129.0+1.21.7"
+deps.fabric-loader-min = "0.16.13"
+
+[fabric."1.21.9"]
+deps.minecraft = "1.21.9"
+deps.fabric-api = "0.134.1+1.21.9"
+deps.fabric-api-min = "0.134.1+1.21.9"
+deps.fabric-loader-min = "0.17.0"
+
+[fabric."1.21.10"]
+deps.minecraft = "1.21.10"
+deps.fabric-api = "0.138.4+1.21.10"
+deps.fabric-api-min = "0.138.4+1.21.10"
+deps.fabric-loader-min = "0.17.0"
+
+[fabric."26.1"]
+deps.minecraft = "26.1"
+deps.fabric-api = "0.145.1+26.1"
+deps.fabric-api-min = "0.145.1+26.1"
+deps.fabric-loader-min = "0.18.4"
+
+[fabric."26.1.1"]
+deps.minecraft = "26.1.1"
+deps.fabric-api = "0.145.4+26.1.1"
+deps.fabric-api-min = "0.145.4+26.1.1"
+deps.fabric-loader-min = "0.18.4"
+
+# ---- NeoForge point releases (modern moddev; added 2026-07-19) ----
+[neoforge."1.20.2"]
+deps.minecraft = "1.20.2"
+deps.neoforge = "20.2.93"
+
+[neoforge."1.20.3"]
+deps.minecraft = "1.20.3"
+deps.neoforge = "20.3.8-beta"
+
+[neoforge."1.20.4"]
+deps.minecraft = "1.20.4"
+deps.neoforge = "20.4.251"
+
+[neoforge."1.20.5"]
+deps.minecraft = "1.20.5"
+deps.neoforge = "20.5.21-beta"
+
+[neoforge."1.21"]
+deps.minecraft = "1.21"
+deps.neoforge = "21.0.167"
+
+[neoforge."1.21.2"]
+deps.minecraft = "1.21.2"
+deps.neoforge = "21.2.1-beta"
+
+[neoforge."1.21.3"]
+deps.minecraft = "1.21.3"
+deps.neoforge = "21.3.97"
+
+[neoforge."1.21.5"]
+deps.minecraft = "1.21.5"
+deps.neoforge = "21.5.98"
+
+[neoforge."1.21.6"]
+deps.minecraft = "1.21.6"
+deps.neoforge = "21.6.20-beta"
+
+[neoforge."1.21.7"]
+deps.minecraft = "1.21.7"
+deps.neoforge = "21.7.25-beta"
+
+[neoforge."1.21.9"]
+deps.minecraft = "1.21.9"
+deps.neoforge = "21.9.16-beta"
+
+[neoforge."1.21.10"]
+deps.minecraft = "1.21.10"
+deps.neoforge = "21.10.64"
+
+[neoforge."26.1"]
+deps.minecraft = "26.1"
+deps.neoforge = "26.1.0.19-beta"
+
+[neoforge."26.1.1"]
+deps.minecraft = "26.1.1"
+deps.neoforge = "26.1.1.15-beta"
+
+# ---- Forge (net.minecraftforge:forge; added 2026-07-19) ----
+# Forge has no build for 1.20.5 or 1.21.2 (upstream skipped those). deps.forge is the
+# build number only ("<mc>-<forge>" is assembled in build.forge.gradle.kts).
+# Legacy toolchain (MDG legacyforge) covers <=1.20.1; modern nodes may need ForgeGradle.
+[forge."1.20.1"]
+deps.minecraft = "1.20.1"
+deps.forge = "47.4.21"
+
+[forge."1.20.2"]
+deps.minecraft = "1.20.2"
+deps.forge = "48.0.0"
+
+[forge."1.20.3"]
+deps.minecraft = "1.20.3"
+deps.forge = "49.0.1"
+
+[forge."1.20.4"]
+deps.minecraft = "1.20.4"
+deps.forge = "49.2.8"
+
+[forge."1.20.6"]
+deps.minecraft = "1.20.6"
+deps.forge = "50.2.9"
+
+[forge."1.21"]
+deps.minecraft = "1.21"
+deps.forge = "51.0.0"
+
+[forge."1.21.1"]
+deps.minecraft = "1.21.1"
+deps.forge = "52.1.15"
+
+[forge."1.21.3"]
+deps.minecraft = "1.21.3"
+deps.forge = "53.1.11"
+
+[forge."1.21.4"]
+deps.minecraft = "1.21.4"
+deps.forge = "54.1.17"
+
+[forge."1.21.5"]
+deps.minecraft = "1.21.5"
+deps.forge = "55.1.11"
+
+[forge."1.21.6"]
+deps.minecraft = "1.21.6"
+deps.forge = "56.0.0"
+
+[forge."1.21.7"]
+deps.minecraft = "1.21.7"
+deps.forge = "57.0.0"
+
+[forge."1.21.8"]
+deps.minecraft = "1.21.8"
+deps.forge = "58.1.19"
+
+[forge."1.21.9"]
+deps.minecraft = "1.21.9"
+deps.forge = "59.0.5"
+
+[forge."1.21.10"]
+deps.minecraft = "1.21.10"
+deps.forge = "60.1.11"
+
+# Pinned to 61.1.0 deliberately: later 61.1.x builds (verified through 61.1.9) ship
+# binary patches for net.minecraft.network.codec.ByteBufCodecs that are inconsistent with
+# loom's merged 1.21.11 jar — ByteBufCodecs$11 keeps its (int) constructor but the patched
+# <clinit> calls the no-arg one, so the dev server dies at vanilla startup with
+# "NoSuchMethodError: ByteBufCodecs$11.<init>()" before any mod loads. 61.1.0's patches are
+# self-consistent. Only affects the dev runServer; the built jar runs on any Forge 61.x.
+[forge."1.21.11"]
+deps.minecraft = "1.21.11"
+deps.forge = "61.1.0"
+
+[forge."26.1"]
+deps.minecraft = "26.1"
+deps.forge = "62.0.9"
+
+[forge."26.1.1"]
+deps.minecraft = "26.1.1"
+deps.forge = "63.0.2"
+
+[forge."26.1.2"]
+deps.minecraft = "26.1.2"
+deps.forge = "64.0.12"
+
+[forge."26.2"]
+deps.minecraft = "26.2"
+deps.forge = "65.0.5"
